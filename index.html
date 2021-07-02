@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>WebSocket Tracker App</h2>
+
+    <div>
+        <button type="button" onclick="connect()">Connect</button>
+        <button type="button" onclick="disconnect()">Disconnect</button>
+    </div>
+    <br /><br />
+    <div>
+        <label>Enter message to send</label>
+        <br /><br />
+        <input id="input-username" placeholder="username"/>
+        <input id="input-coordinate" placeholder="coordinate"/>
+        <input id="input-asset" placeholder="asset"/>
+        <button id="btnEvaluate" disabled type="button" onclick="sendData()">Track</button>
+    </div>
+    <br />
+    <div>
+        <h4>Recent Result</h4>
+        <p id="result"></p>
+    </div>
+</body>
+<script type="text/javascript">
+    var ws;
+    function connect() {
+        console.log('starting');
+        ws = new WebSocket("ws://localhost:8081/");
+        ws.onmessage = function(event) {
+            showData(event.data);
+        }
+        ws.onopen= function(event){
+            document.getElementById("btnEvaluate").disabled = false
+            showData("Connection open!");
+        };
+        ws.onclose = function(event){
+            document.getElementById("btnEvaluate").disabled = true
+            showData("Connection closed!");
+        };
+        document.getElementById("result").innerHTML = "";
+    }
+    function disconnect() {
+        if (ws != null) {
+            ws.close();
+        }
+    }
+    function sendData() {
+        var username = document.getElementById("input-username").value;
+        var coordinate = document.getElementById("input-coordinate").value;
+        var assetId = document.getElementById("input-asset").value;
+        if(username && coordinate && assetId)
+        {
+            ws.send(JSON.stringify({
+                event: 'TRACK_ASSET',
+                data: { client: {username, coordinate: {
+                    lat: coordinate.split(",")[0],
+                    long: coordinate.split(",")[1]
+                } }, assetId }
+            }));
+        }else showData("Invalid parameters!");
+    }
+    function showData(message) {
+        document.getElementById("result").innerHTML += "<br/>" + message;
+    }
+</script>
+</html>

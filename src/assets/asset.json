@@ -1,0 +1,5 @@
+[
+    { "id": "1", "name": "asset-1", "position": {"lat": 6.556961, "long": 3.329431} },
+    { "id": "2", "name": "asset-2", "position": {"lat": 6.4914631, "long": 3.3570207} },
+    { "id": "3", "name": "asset-3", "position": {"lat": 6.4914631, "long": 3.3570207} }
+]
