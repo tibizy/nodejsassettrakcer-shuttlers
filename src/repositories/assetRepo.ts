@@ -1,15 +1,13 @@
+import WebSocket from 'ws';
 import { Asset, Coordinates } from "../models/asset";
 import { ConnectedClient } from "../models/client";
 
 export default class AssetRepo {
     private static instance: AssetRepo;
 
-    private assets: Asset[] = [
-        { "id": "1", "name": "asset-1", "position": {"lat": 6.556961, "long": 3.329431} },
-        { "id": "2", "name": "asset-2", "position": {"lat": 6.4914631, "long": 3.3570207} },
-        { "id": "3", "name": "asset-3", "position": {"lat": 6.4914631, "long": 3.3570207} }
-    ];
-    private connectedClients: ConnectedClient[] = [];
+    private assets: Asset[] = this.getAssets();;
+    private connectedClients: any = {};
+    private assetsTracked: any = {};
 
     /**
      * The Singleton's constructor should always be private to prevent direct
@@ -31,34 +29,64 @@ export default class AssetRepo {
         return AssetRepo.instance;
     }
 
-    getAssetById(id: string) {
+    async getAssetById(id: string) {
         return this.assets.find(a => a.id == id);
     }
 
-    getAllAsset() {
+    async getAllAsset() {
         return this.assets;
     }
     
-    getAllConnectedClient() {
-      return this.connectedClients;
+    async getAllConnectedClient() {
+        const clients: any[] = [];
+        Object.keys(this.connectedClients).forEach(a => clients.push({[a]: this.connectedClients[a]}));
+        return clients;
     }
     
-    updateAssetPosition(assetId: string, coordinates: Coordinates) {
+    async updateAssetPosition(assetId: string, coordinates: Coordinates) {
       const assetIndex = this.assets.findIndex(a => a.id == assetId);
       if(assetIndex >= 0) this.assets[assetIndex] = { ...this.assets[assetIndex], position: coordinates }
     }
-
-    addClientToAssetClients(id: string, connectedClient: ConnectedClient) {
-        const existingClientIndex = this.connectedClients.findIndex(c => c?.client.id === id);
-        connectedClient.client.id = id;
-        console.log('coordoordd', connectedClient.client)
-        if(existingClientIndex >= 0) this.connectedClients[existingClientIndex] = connectedClient;
-        else this.connectedClients.push(connectedClient);
-        return connectedClient.assetId;
+    
+    async resetAssetData() {
+        this.assets = this.getAssets();
+      }
+      
+    async getAllTrackedAsset() {
+        const assets: any[] = [];
+        Object.keys(this.assetsTracked).forEach(a => assets.push(this.assetsTracked[a]));
+        return assets;
     }
 
-    removeClientFromAssetClients(id: string) {
-        const index = this.connectedClients.findIndex(c => c.client.id == id);
-        if(index >= 0) this.connectedClients.splice(index, 1);
+    async addClientToTrackedAsset(id: string, connectedClient: ConnectedClient) {
+        connectedClient.client.id = id;
+        this.assetsTracked[id] = connectedClient;
+        return this.assetsTracked[id];
+    }
+
+    async removeClientFromTrackedAsset(id: string) {
+        delete this.assetsTracked[id];
+    }
+
+    async getConnectedClient(id: string) {
+        return this.connectedClients[id];
+    }
+
+    async addClientToConnectedClients(id: string, ws: WebSocket) {
+        this.connectedClients[id] = ws;
+        return this.connectedClients[id];
+    }
+
+    async removeClientFromConnectedClients(id: string) {
+        delete this.connectedClients[id];
+        delete this.assetsTracked[id];
+    }
+
+    getAssets() {
+        return [
+            { "id": "1", "name": "asset-1", "position": {"lat": 6.4764224, "long": 3.3682224} }, //6.4774138, 3.3676215 
+            { "id": "2", "name": "asset-2", "position": {"lat": 6.4914631, "long": 3.3570207} },
+            { "id": "3", "name": "asset-3", "position": {"lat": 6.4914631, "long": 3.3570207} }
+        ]
     }
 }

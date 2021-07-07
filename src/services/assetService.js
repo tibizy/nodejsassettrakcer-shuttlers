@@ -39,18 +39,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeClientFromAssetClients = exports.addClientToAssetClients = exports.updateAssetPosition = exports.getAllConnectedClient = exports.getAllAsset = exports.getAssetById = void 0;
+exports.notifyClientsOfTrackAsset = exports.removeClientFromConnectedClients = exports.addClientToConnectedClients = exports.removeClientFromTrackedAsset = exports.addClientToTrackedAsset = exports.resetAssetData = exports.updateAssetPosition = exports.getAllConnectedClient = exports.getAllAsset = exports.getAssetById = void 0;
 var assetRepo_1 = __importDefault(require("../repositories/assetRepo"));
-var assets = [
-    { "id": "1", "name": "asset-1", "position": { "lat": 6.556961, "long": 3.329431 } },
-    { "id": "2", "name": "asset-2", "position": { "lat": 6.4914631, "long": 3.3570207 } },
-    { "id": "3", "name": "asset-3", "position": { "lat": 6.4914631, "long": 3.3570207 } }
-];
+var distance_1 = __importDefault(require("../helpers/distance"));
 var assetRepo = assetRepo_1.default.getInstance();
 function getAssetById(id) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.getAssetById(id)];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.getAssetById(id)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
@@ -58,7 +57,10 @@ exports.getAssetById = getAssetById;
 function getAllAsset() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.getAllAsset()];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.getAllAsset()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
@@ -66,7 +68,10 @@ exports.getAllAsset = getAllAsset;
 function getAllConnectedClient() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.getAllConnectedClient()];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.getAllConnectedClient()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
@@ -74,24 +79,110 @@ exports.getAllConnectedClient = getAllConnectedClient;
 function updateAssetPosition(assetId, coordinates) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.updateAssetPosition(assetId, coordinates)];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.updateAssetPosition(assetId, coordinates)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
 exports.updateAssetPosition = updateAssetPosition;
-function addClientToAssetClients(id, connectedClient) {
+function resetAssetData() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.addClientToAssetClients(id, connectedClient)];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.resetAssetData()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
-exports.addClientToAssetClients = addClientToAssetClients;
-function removeClientFromAssetClients(id) {
+exports.resetAssetData = resetAssetData;
+function addClientToTrackedAsset(id, connectedClient) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, assetRepo.removeClientFromAssetClients(id)];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.addClientToTrackedAsset(id, connectedClient)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
     });
 }
-exports.removeClientFromAssetClients = removeClientFromAssetClients;
+exports.addClientToTrackedAsset = addClientToTrackedAsset;
+function removeClientFromTrackedAsset(id) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.removeClientFromTrackedAsset(id)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.removeClientFromTrackedAsset = removeClientFromTrackedAsset;
+function addClientToConnectedClients(id, ws) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.addClientToConnectedClients(id, ws)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.addClientToConnectedClients = addClientToConnectedClients;
+function removeClientFromConnectedClients(id) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, assetRepo.removeClientFromConnectedClients(id)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.removeClientFromConnectedClients = removeClientFromConnectedClients;
+function notifyClientsOfTrackAsset() {
+    return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return __generator(this, function (_a) {
+            setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                var trackedAssets;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, assetRepo.getAllTrackedAsset()];
+                        case 1:
+                            trackedAssets = _a.sent();
+                            console.log('sending every 5, asset tracked: ', trackedAssets.length);
+                            trackedAssets.forEach(function (trackedAsset) { return __awaiter(_this, void 0, void 0, function () {
+                                var connectedClientWS, asset, distance;
+                                var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+                                return __generator(this, function (_k) {
+                                    switch (_k.label) {
+                                        case 0: return [4 /*yield*/, assetRepo.getConnectedClient((_a = trackedAsset.client) === null || _a === void 0 ? void 0 : _a.id)];
+                                        case 1:
+                                            connectedClientWS = _k.sent();
+                                            return [4 /*yield*/, assetRepo.getAssetById(trackedAsset === null || trackedAsset === void 0 ? void 0 : trackedAsset.assetId)];
+                                        case 2:
+                                            asset = _k.sent();
+                                            distance = Math.round(distance_1.default.calcCrow(((_b = asset === null || asset === void 0 ? void 0 : asset.position) === null || _b === void 0 ? void 0 : _b.lat) || 0, ((_c = asset === null || asset === void 0 ? void 0 : asset.position) === null || _c === void 0 ? void 0 : _c.long) || 0, ((_e = (_d = trackedAsset === null || trackedAsset === void 0 ? void 0 : trackedAsset.client) === null || _d === void 0 ? void 0 : _d.coordinate) === null || _e === void 0 ? void 0 : _e.lat) || 0, ((_g = (_f = trackedAsset === null || trackedAsset === void 0 ? void 0 : trackedAsset.client) === null || _f === void 0 ? void 0 : _f.coordinate) === null || _g === void 0 ? void 0 : _g.long) || 0) * 1000);
+                                            if ((distance <= 100 && distance >= 0) && (distance % 10 == 0)) {
+                                                connectedClientWS === null || connectedClientWS === void 0 ? void 0 : connectedClientWS.send("asset is " + distance + " meters away");
+                                            }
+                                            else {
+                                                connectedClientWS === null || connectedClientWS === void 0 ? void 0 : connectedClientWS.send(JSON.stringify({ id: asset === null || asset === void 0 ? void 0 : asset.id, location: ((_h = asset === null || asset === void 0 ? void 0 : asset.position) === null || _h === void 0 ? void 0 : _h.lat) + ", " + ((_j = asset === null || asset === void 0 ? void 0 : asset.position) === null || _j === void 0 ? void 0 : _j.long) }));
+                                            }
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                            return [2 /*return*/];
+                    }
+                });
+            }); }, 5000);
+            return [2 /*return*/];
+        });
+    });
+}
+exports.notifyClientsOfTrackAsset = notifyClientsOfTrackAsset;

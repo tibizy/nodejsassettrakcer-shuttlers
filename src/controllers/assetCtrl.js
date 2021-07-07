@@ -59,13 +59,10 @@ exports.updateAssetPosition = exports.getAllConnectedClient = exports.get = void
 var AccountService = __importStar(require("../services/assetService"));
 function get(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var param, client, result;
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    param = req.body || {};
-                    client = res.locals.client;
-                    return [4 /*yield*/, AccountService.getAllAsset()];
+                case 0: return [4 /*yield*/, AccountService.getAllAsset()];
                 case 1:
                     result = _a.sent();
                     res.json(result);
@@ -77,13 +74,10 @@ function get(req, res) {
 exports.get = get;
 function getAllConnectedClient(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var param, client, result;
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    param = req.body || {};
-                    client = res.locals.client;
-                    return [4 /*yield*/, AccountService.getAllConnectedClient()];
+                case 0: return [4 /*yield*/, AccountService.getAllConnectedClient()];
                 case 1:
                     result = _a.sent();
                     res.json(result);
@@ -95,14 +89,12 @@ function getAllConnectedClient(req, res) {
 exports.getAllConnectedClient = getAllConnectedClient;
 function updateAssetPosition(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var param, client, assetId, result;
+        var param, assetId, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     param = req.body || {};
-                    client = res.locals.client;
                     assetId = req.params.assetId;
-                    console.log('param', param);
                     return [4 /*yield*/, AccountService.updateAssetPosition(assetId, { lat: param.lat, long: param.long })];
                 case 1:
                     result = _a.sent();

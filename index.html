@@ -32,13 +32,16 @@
         console.log('starting');
         ws = new WebSocket("ws://localhost:8081/");
         ws.onmessage = function(event) {
+            console.log('onmessage: ', event)
             showData(event.data);
         }
         ws.onopen= function(event){
+            console.log('onopen: ', event)
             document.getElementById("btnEvaluate").disabled = false
             showData("Connection open!");
         };
         ws.onclose = function(event){
+            console.log('onclose: ', event)
             document.getElementById("btnEvaluate").disabled = true
             showData("Connection closed!");
         };
